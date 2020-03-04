@@ -1,6 +1,7 @@
 package com.example.myapplication;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -19,6 +20,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     ActionBarDrawerToggle drawerToggle;
     Toolbar toolbar;
     NavigationView navigationView;
+    boolean doubleBackToExitPressedOnce = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,13 +28,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setContentView(R.layout.activity_main);
         toolbar = findViewById(R.id.toolbar);
         toolbar.setTitleTextColor(getResources().getColor(R.color.white));
+        toolbar.setOverflowIcon(getDrawable(R.drawable.ic_more_vert_black_24dp));
         setSupportActionBar(toolbar);
 
         // drawer menu setting
         drawerLayout = findViewById(R.id.drawer);
         drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.open_drawer, R.string.close_drawer);
         drawerLayout.addDrawerListener(drawerToggle);
-        drawerToggle.getDrawerArrowDrawable().setColor(getResources().getColor(R.color.magenta));
+        drawerToggle.getDrawerArrowDrawable().setColor(getResources().getColor(R.color.white));
         drawerToggle.setDrawerIndicatorEnabled(true);
         drawerToggle.syncState();
 
@@ -52,11 +55,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
         switch (item.getItemId()) {
             case R.id.setting:
                 Toast.makeText(this, "PENGATURAN", Toast.LENGTH_SHORT).show();
                 break;
-            case R.id.contact:
+            case R.id.about:
                 Toast.makeText(this, "KONTAK", Toast.LENGTH_SHORT).show();
                 break;
         }
@@ -74,5 +78,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
         }
         return false;
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (doubleBackToExitPressedOnce) {
+            super.onBackPressed();
+            return;
+        }
+
+        this.doubleBackToExitPressedOnce = true;
+        Toast.makeText(this, "TEKAN TOMBOL SEKALI LAGI UNTUK KELUAR", Toast.LENGTH_SHORT).show();
+
+        new Handler().postDelayed((new Runnable() {
+            @Override
+            public void run() {
+                doubleBackToExitPressedOnce = false;
+            }
+        }), 2000);
     }
 }
